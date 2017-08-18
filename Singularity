@@ -39,9 +39,13 @@ MirrorURL: http://http.debian.net/debian/
 
 # so if image is executed we just enter the environment
 %runscript
-    echo "Welcome to the NeuroDebian v 2.2 (Debian stretch) environment"
+    v=`python -c "import json; f='/.singularity.d/labels.json'; print(json.load(open(f)).get('SINGULARITY_IMAGE_VERSION', '0.0.unknown'))"`; \
+      echo "Welcome to the NeuroDebian v $v (Debian stretch) environment"
     echo "Please source /etc/fsl/fsl.sh if you need FSL, /etc/afni/afni.sh if you need AFNI"
     /bin/bash
 
 %post
     echo "Configuring the environment"
+    v=`git describe --tags --match sing-\* | sed -e 's,^sing-,,g'`; \
+      python -c "import json; f='/.singularity.d/labels.json'; j=json.load(open(f)); j['SINGULARITY_IMAGE_VERSION']='$v' or '0.0.unknown';json.dump(j, open('/tmp/j','w'),indent=2)"
+
