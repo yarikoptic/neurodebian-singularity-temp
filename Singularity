@@ -51,5 +51,5 @@ MirrorURL: http://http.debian.net/debian/
     apt-get -y install python 
 
     v=`git describe --tags --match sing-\* | sed -e 's,^sing-,,g'`; \
-      python -c "import json; f='/.singularity.d/labels.json'; j=json.load(open(f)); j['SINGULARITY_IMAGE_VERSION']='$v' or '0.0.unknown';json.dump(j, open('/tmp/j','w'),indent=2)"
+      python -c "import json, os; f='/.singularity.d/labels.json'; j=json.load(open(f)) if os.path.exists(f) else {}; j['SINGULARITY_IMAGE_VERSION']='$v' or '0.0.unknown'; json.dump(j, open(f,'w'),indent=2)"
 
