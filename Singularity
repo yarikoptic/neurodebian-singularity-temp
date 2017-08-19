@@ -44,12 +44,16 @@ MirrorURL: http://http.debian.net/debian/
     echo "Please source /etc/fsl/fsl.sh if you need FSL, /etc/afni/afni.sh if you need AFNI"
     /bin/bash
 
-%post
+%setup
     set -eu
-    echo "Configuring the environment"
+    echo "Setting up the environment"
     apt-get update
     apt-get -y install python 
 
     v=`git describe --tags --match sing-\* | sed -e 's,^sing-,,g'`; \
-      python -c "import json, os; f='/.singularity.d/labels.json'; j=json.load(open(f)) if os.path.exists(f) else {}; j['SINGULARITY_IMAGE_VERSION']='$v' or '0.0.unknown'; json.dump(j, open(f,'w'),indent=2)"
+      python -c "import json, os; f='$SINGULARITY_ROOTFS/.singularity.d/labels.json'; j=json.load(open(f)) if os.path.exists(f) else {}; j['SINGULARITY_IMAGE_VERSION']='$v' or '0.0.unknown'; json.dump(j, open(f,'w'),indent=2)"
+
+%post
+    set -eu
+    echo "Configuring the environment"
 
