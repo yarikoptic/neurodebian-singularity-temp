@@ -56,4 +56,6 @@ MirrorURL: http://http.debian.net/debian/
 %post
     set -eu
     echo "Configuring the environment"
+    apt-get update
+    apt-get -y install python 
 
